@@ -1,0 +1,74 @@
+﻿<Window x:Class="WpfApp4.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfApp4.ViewModels"
+        mc:Ignorable="d"
+        Title="Cloud Storage Manager" Height="600" Width="900">
+
+    <Window.DataContext>
+        <local:MainViewModel />
+    </Window.DataContext>
+
+    <Grid Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="250"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="300"/>
+        </Grid.ColumnDefinitions>
+
+        <Border Grid.Column="0" BorderBrush="Gray" BorderThickness="1" Margin="0,0,5,0">
+            <DockPanel>
+                <TextBlock Text="Папки" FontWeight="Bold" Padding="5" DockPanel.Dock="Top"/>
+                <ListBox ItemsSource="{Binding Folders}" 
+                         SelectedItem="{Binding SelectedFolder}"
+                         DisplayMemberPath="Name"
+                         Margin="5"/>
+            </DockPanel>
+        </Border>
+
+        <Border Grid.Column="1" BorderBrush="Gray" BorderThickness="1" Margin="5,0,5,0">
+            <DockPanel>
+                <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Margin="5">
+                    <Button Content="Загрузить файл" Command="{Binding UploadCommand}" Width="100" Margin="0,0,5,0"/>
+                    <Button Content="Удалить" Command="{Binding DeleteCommand}" Width="80" Margin="0,0,5,0"/>
+                    <Button Content="Поделиться" Command="{Binding ShareCommand}" Width="80"/>
+                </StackPanel>
+
+                <ListView ItemsSource="{Binding Files}" 
+                          SelectedItem="{Binding SelectedFile}"
+                          Margin="5">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Имя" DisplayMemberBinding="{Binding Name}" Width="200"/>
+                            <GridViewColumn Header="Размер (Б)" DisplayMemberBinding="{Binding Size}" Width="100"/>
+                            <GridViewColumn Header="Дата" DisplayMemberBinding="{Binding UploadDate, StringFormat={}{0:dd.MM.yyyy}}" Width="120"/>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </DockPanel>
+        </Border>
+
+        <Border Grid.Column="2" BorderBrush="Gray" BorderThickness="1" Margin="5,0,0,0">
+            <DockPanel>
+                <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Margin="5">
+                    <TextBlock Text="Журнал действий" FontWeight="Bold" VerticalAlignment="Center"/>
+                    <Button Content="Обновить" Command="{Binding RefreshLogsCommand}" Margin="10,0,0,0" Padding="5,0"/>
+                </StackPanel>
+
+                <ListView ItemsSource="{Binding Logs}" Margin="5">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel>
+                                <TextBlock Text="{Binding ActionType}" FontWeight="Bold" Foreground="DarkBlue"/>
+                                <TextBlock Text="{Binding Details}" FontSize="10"/>
+                                <TextBlock Text="{Binding Timestamp, StringFormat={}{0:HH:mm:ss}}" FontSize="9" Foreground="Gray"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </DockPanel>
+        </Border>
+    </Grid>
+</Window>
